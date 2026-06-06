@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>صفحة التسجيل</title>
+    <style>
+        /* إعدادات الخطوط والألوان العامة */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #FFDE4D; /* اللون الأصفر الرئيسي */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            padding: 20px;
+        }
+
+        /* كرت النموذج الرئيسي */
+        .card {
+            background-color: #ffffff;
+            Aaaaaaaaa@: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        h2 {
+            color: #1a1a1a;
+            margin-bottom: 25px;
+            font-size: 24px;
+        }
+
+        /* إعدادات حقول الإدخال */
+        .input-group {
+            margin-bottom: 20px;
+            text-align: right;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            outline: none;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus {
+            border-color: #FFDE4D; 
+        }
+
+        /* زر الإرسال */
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #FFDE4D; /* الزر أصفر */
+            color: #1a1a1a;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            background-color: #e6c645; /* تغميق اللون الأصفر قليلاً عند مرور الماوس */
+        }
+
+        /* رسالة النجاح (مخفية في البداية) */
+        .success-message {
+            display: none;
+        }
+
+        .success-message h3 {
+            color: #2e7d32;
+            font-size: 22px;
+            margin-bottom: 10px;
+        }
+
+        .success-icon {
+            font-size: 50px;
+            color: #FFDE4D;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <form id="registrationForm" action="https://api.web3forms.com/submit" method="POST" onsubmit="handleSubmit(event)">
+            
+            <input type="hidden" name="access_key" value="YOUR_ACCESS_KEY_HERE">
+            
+            <h2>مرحباً بك معنا</h2>
+            
+            <div class="input-group">
+                <label for="name">الاسم الكامل</label>
+                <input type="text" id="name" name="الاسم" required placeholder="أدخل اسمك هنا">
+            </div>
+
+            <div class="input-group">
+                <label for="email">البريد الإلكتروني</label>
+                <input type="email" id="email" name="البريد الإلكتروني" required placeholder="example@email.com">
+            </div>
+
+            <button type="submit" class="btn">إرسال</button>
+        </form>
+
+        <div id="successMessage" class="success-message">
+            <div class="success-icon">✓</div>
+            <h3>تم الإرسال بنجاح!</h3>
+            <p>شكراً لتسجيلك معنا، تم حفظ بياناتك.</p>
+        </div>
+    </div>
+
+    <script>
+        function handleSubmit(event) {
+            // منع الصفحة من إعادة التحميل الافتراضية
+            event.preventDefault(); 
+            
+            const form = event.target;
+            const formData = new FormData(form);
+            const submitBtn = form.querySelector('.btn');
+            const originalBtnText = submitBtn.innerText;
+            submitBtn.innerText = "جاري الإرسال...";
+            submitBtn.disabled = true;
+
+            // إرسال البيانات في الخلفية عبر الـ API الخاص بـ Web3Forms
+            fetch(form.action, {
+                method: form.method,
+                body: formData,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    // إذا نجح الإرسال: إخفاء نموذج الإدخال وإظهار رسالة النجاح
+                    document.getElementById('registrationForm').style.display = 'none';
+                    document.getElementById('successMessage').style.display = 'block';
+                } else {
+                    alert("عذراً، حدث خطأ أثناء الإرسال. تأكد من إعداد المفتاح السري بشكل صحيح.");
+                    submitBtn.innerText = originalBtnText;
+                    submitBtn.disabled = false;
+                }
+            })
+            .catch(error => {
+                alert("عذراً، هناك مشكلة في الاتصال بالشبكة.");
+                submitBtn.innerText = originalBtnText;
+                submitBtn.disabled = false;
+            });
+        }
+    </script>
+
+</body>
+</html>
